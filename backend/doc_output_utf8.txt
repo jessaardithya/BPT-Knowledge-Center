@@ -1,0 +1,85 @@
+﻿package vector // import "github.com/couchbase/gocb/v2/vector"
+
+
+TYPES
+
+type InternalQuery struct {
+	Field        string
+	Vector       []float32
+	Base64Vector string
+
+	NumCandidates *uint32
+	Boost         *float32
+	Prefilter     search.Query
+}
+    InternalQuery is used for internal functionality. Internal: This should
+    never be used and is not supported.
+
+func (q InternalQuery) MarshalJSON() ([]byte, error)
+    MarshalJSON marshal's this query to JSON for the search REST API.
+
+func (q InternalQuery) Validate() error
+    Validate verifies that settings in the query are valid.
+
+type InternalSearch struct {
+	Queries []InternalQuery
+
+	VectorQueryCombination VectorQueryCombination
+}
+    InternalSearch is used for internal functionality. Internal: This should
+    never be used and is not supported.
+
+func (s InternalSearch) Validate() error
+    Validate verifies that settings in the search (including all queries) are
+    valid.
+
+type Query struct {
+	// Has unexported fields.
+}
+    Query specifies a vector Query.
+
+func NewBase64Query(vectorFieldName string, base64Vector string) *Query
+    NewBase64Query constructs a new vector Query using a Base64-encoded sequence
+    of little-endian IEEE 754 floats.
+
+func NewQuery(vectorFieldName string, vector []float32) *Query
+    NewQuery constructs a new vector Query.
+
+func (q *Query) Boost(boost float32) *Query
+    Boost specifies the boost for this query.
+
+func (q *Query) Internal() InternalQuery
+    Internal is used for internal functionality. Internal: This should never be
+    used and is not supported.
+
+func (q *Query) NumCandidates(num uint32) *Query
+    NumCandidates controls how many results are returned for this query.
+
+func (q *Query) Prefilter(query search.Query) *Query
+    Prefilter specifies a search.Query to filter by before executing the query.
+
+type Search struct {
+	// Has unexported fields.
+}
+    Search specifies a vector Search.
+
+func NewSearch(queries []*Query, opts *SearchOptions) *Search
+    NewSearch constructs a new vector Search.
+
+func (s *Search) Internal() InternalSearch
+    Internal is used for internal functionality. Internal: This should never be
+    used and is not supported.
+
+type SearchOptions struct {
+	VectorQueryCombination VectorQueryCombination
+}
+    SearchOptions specifies the options available to vector Search.
+
+type VectorQueryCombination string
+    VectorQueryCombination specifies how elements in the array are combined.
+
+const (
+	VectorQueryCombinationNotSet VectorQueryCombination = ""
+	VectorQueryCombinationAnd    VectorQueryCombination = "and"
+	VectorQueryCombinationOr     VectorQueryCombination = "or"
+)

@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+python-multipart
+unstructured
+unstructured[pptx]
+unstructured[pdf]
+pymupdf
+sentence-transformers
+pydantic-settings

@@ -1,0 +1,565 @@
+﻿package search // import "github.com/couchbase/gocb/v2/search"
+
+
+TYPES
+
+type BooleanFieldQuery struct {
+	// Has unexported fields.
+}
+    BooleanFieldQuery represents a search boolean field query.
+
+func NewBooleanFieldQuery(val bool) *BooleanFieldQuery
+    NewBooleanFieldQuery creates a new BooleanFieldQuery.
+
+func (q *BooleanFieldQuery) Boost(boost float32) *BooleanFieldQuery
+    Boost specifies the boost for this query.
+
+func (q *BooleanFieldQuery) Field(field string) *BooleanFieldQuery
+    Field specifies the field for this query.
+
+func (q BooleanFieldQuery) MarshalJSON() ([]byte, error)
+    MarshalJSON marshal's this query to JSON for the search REST API.
+
+type BooleanQuery struct {
+	// Has unexported fields.
+}
+    BooleanQuery represents a search boolean query.
+
+func NewBooleanQuery() *BooleanQuery
+    NewBooleanQuery creates a new BooleanQuery.
+
+func (q *BooleanQuery) Boost(boost float32) *BooleanQuery
+    Boost specifies the boost for this query.
+
+func (q BooleanQuery) MarshalJSON() ([]byte, error)
+    MarshalJSON marshal's this query to JSON for the search REST API.
+
+func (q *BooleanQuery) Must(queries ...Query) *BooleanQuery
+    Must specifies queries which must match.
+
+func (q *BooleanQuery) MustNot(queries ...Query) *BooleanQuery
+    MustNot specifies queries which must not match.
+
+func (q *BooleanQuery) Should(queries ...Query) *BooleanQuery
+    Should specifies queries which should match.
+
+func (q *BooleanQuery) ShouldMin(min uint32) *BooleanQuery
+    ShouldMin specifies the minimum value before the should query will boost.
+
+type ConjunctionQuery struct {
+	// Has unexported fields.
+}
+    ConjunctionQuery represents a search conjunction query.
+
+func NewConjunctionQuery(queries ...Query) *ConjunctionQuery
+    NewConjunctionQuery creates a new ConjunctionQuery.
+
+func (q *ConjunctionQuery) And(queries ...Query) *ConjunctionQuery
+    And adds new predicate queries to this conjunction query.
+
+func (q *ConjunctionQuery) Boost(boost float32) *ConjunctionQuery
+    Boost specifies the boost for this query.
+
+func (q ConjunctionQuery) MarshalJSON() ([]byte, error)
+    marshal's query to JSON for use with search REST API.
+
+type Coordinate struct {
+	Lon float64
+	Lat float64
+}
+    Coordinate is a tuple of a latitude and a longitude.
+
+type DateFacet struct {
+	// Has unexported fields.
+}
+    DateFacet is an search date range facet.
+
+func NewDateFacet(field string, size uint64) *DateFacet
+    NewDateFacet creates a new date range facet.
+
+func (f *DateFacet) AddRange(name string, start, end string) *DateFacet
+    AddRange adds a new range to this date range facet.
+
+func (f DateFacet) MarshalJSON() ([]byte, error)
+    MarshalJSON marshal's this facet to JSON for the search REST API.
+
+type DateRangeQuery struct {
+	// Has unexported fields.
+}
+    DateRangeQuery represents a search date range query.
+
+func NewDateRangeQuery() *DateRangeQuery
+    NewDateRangeQuery creates a new DateRangeQuery.
+
+func (q *DateRangeQuery) Boost(boost float32) *DateRangeQuery
+    Boost specifies the boost for this query.
+
+func (q *DateRangeQuery) DateTimeParser(parser string) *DateRangeQuery
+    DateTimeParser specifies which date time string parser to use.
+
+func (q *DateRangeQuery) End(end string, inclusive bool) *DateRangeQuery
+    End specifies the end value and inclusiveness for this range query.
+
+func (q *DateRangeQuery) Field(field string) *DateRangeQuery
+    Field specifies the field for this query.
+
+func (q DateRangeQuery) MarshalJSON() ([]byte, error)
+    marshal's query to JSON for use with search REST API.
+
+func (q *DateRangeQuery) Start(start string, inclusive bool) *DateRangeQuery
+    Start specifies the start value and inclusiveness for this range query.
+
+type DisjunctionQuery struct {
+	// Has unexported fields.
+}
+    DisjunctionQuery represents a search disjunction query.
+
+func NewDisjunctionQuery(queries ...Query) *DisjunctionQuery
+    NewDisjunctionQuery creates a new DisjunctionQuery.
+
+func (q *DisjunctionQuery) Boost(boost float32) *DisjunctionQuery
+    Boost specifies the boost for this query.
+
+func (q DisjunctionQuery) MarshalJSON() ([]byte, error)
+    marshal's query to JSON for use with search REST API.
+
+func (q *DisjunctionQuery) Min(min uint32) *DisjunctionQuery
+    Min specifies the minimum number of queries that a document must satisfy.
+
+func (q *DisjunctionQuery) Or(queries ...Query) *DisjunctionQuery
+    Or adds new predicate queries to this disjunction query.
+
+type DocIDQuery struct {
+	// Has unexported fields.
+}
+    DocIDQuery represents a search document id query.
+
+func NewDocIDQuery(ids ...string) *DocIDQuery
+    NewDocIDQuery creates a new DocIdQuery.
+
+func (q *DocIDQuery) AddDocIds(ids ...string) *DocIDQuery
+    AddDocIds adds addition document ids to this query.
+
+func (q *DocIDQuery) Boost(boost float32) *DocIDQuery
+    Boost specifies the boost for this query.
+
+func (q *DocIDQuery) Field(field string) *DocIDQuery
+    Field specifies the field for this query.
+
+func (q DocIDQuery) MarshalJSON() ([]byte, error)
+    MarshalJSON marshal's this query to JSON for the search REST API.
+
+type Facet interface {
+}
+    Facet represents a facet for a search query.
+
+type GeoBoundingBoxQuery struct {
+	// Has unexported fields.
+}
+    GeoBoundingBoxQuery represents a search geographical bounding box query.
+
+func NewGeoBoundingBoxQuery(tlLon, tlLat, brLon, brLat float64) *GeoBoundingBoxQuery
+    NewGeoBoundingBoxQuery creates a new GeoBoundingBoxQuery.
+
+func (q *GeoBoundingBoxQuery) Boost(boost float32) *GeoBoundingBoxQuery
+    Boost specifies the boost for this query.
+
+func (q *GeoBoundingBoxQuery) Field(field string) *GeoBoundingBoxQuery
+    Field specifies the field for this query.
+
+func (q GeoBoundingBoxQuery) MarshalJSON() ([]byte, error)
+    MarshalJSON marshal's this query to JSON for the search REST API.
+
+type GeoDistanceQuery struct {
+	// Has unexported fields.
+}
+    GeoDistanceQuery represents a search geographical distance query.
+
+func NewGeoDistanceQuery(lon, lat float64, distance string) *GeoDistanceQuery
+    NewGeoDistanceQuery creates a new GeoDistanceQuery.
+
+func (q *GeoDistanceQuery) Boost(boost float32) *GeoDistanceQuery
+    Boost specifies the boost for this query.
+
+func (q *GeoDistanceQuery) Field(field string) *GeoDistanceQuery
+    Field specifies the field for this query.
+
+func (q GeoDistanceQuery) MarshalJSON() ([]byte, error)
+    MarshalJSON marshal's this query to JSON for the search REST API.
+
+type GeoPolygonQuery struct {
+	// Has unexported fields.
+}
+    GeoPolygonQuery represents a search query which allows to match inside a geo
+    polygon.
+
+func NewGeoPolygonQuery(coords []Coordinate) *GeoPolygonQuery
+    NewGeoPolygonQuery creates a new GeoPolygonQuery.
+
+func (q *GeoPolygonQuery) Boost(boost float32) *GeoPolygonQuery
+    Boost specifies the boost for this query.
+
+func (q *GeoPolygonQuery) Field(field string) *GeoPolygonQuery
+    Field specifies the field for this query.
+
+func (q GeoPolygonQuery) MarshalJSON() ([]byte, error)
+    MarshalJSON marshal's this query to JSON for the search REST API.
+
+type Internal struct {
+}
+    Internal is used for internal functionality. Internal: This should never be
+    used and is not supported.
+
+func (i Internal) MapFacetsToPs(facets map[string]Facet) (map[string]*search_v1.Facet, error)
+
+func (i Internal) MapQueryToPs(query Query) (*search_v1.Query, error)
+    convert query into the Protostellar format.
+
+func (i Internal) MapSortToPs(in []Sort) ([]*search_v1.Sorting, error)
+
+type MatchAllQuery struct{}
+    MatchAllQuery represents a search match all query.
+
+func NewMatchAllQuery() *MatchAllQuery
+    NewMatchAllQuery creates a new MatchAllQuery.
+
+func (q MatchAllQuery) MarshalJSON() ([]byte, error)
+    MarshalJSON marshal's this query to JSON for the search REST API.
+
+type MatchNoneQuery struct{}
+    MatchNoneQuery represents a search match none query.
+
+func NewMatchNoneQuery() *MatchNoneQuery
+    NewMatchNoneQuery creates a new MatchNoneQuery.
+
+func (q MatchNoneQuery) MarshalJSON() ([]byte, error)
+    MarshalJSON marshal's this query to JSON for the search REST API.
+
+type MatchOperator string
+    MatchOperator defines how the individual match terms should be logically
+    concatenated.
+
+const (
+	// MatchOperatorOr specifies that individual match terms are concatenated with a logical OR - this is the default if not provided.
+	MatchOperatorOr MatchOperator = "or"
+
+	// MatchOperatorAnd specifies that individual match terms are concatenated with a logical AND.
+	MatchOperatorAnd MatchOperator = "and"
+)
+type MatchPhraseQuery struct {
+	// Has unexported fields.
+}
+    MatchPhraseQuery represents a search match phrase query.
+
+func NewMatchPhraseQuery(phrase string) *MatchPhraseQuery
+    NewMatchPhraseQuery creates a new MatchPhraseQuery
+
+func (q *MatchPhraseQuery) Analyzer(analyzer string) *MatchPhraseQuery
+    Analyzer specifies the analyzer to use for this query.
+
+func (q *MatchPhraseQuery) Boost(boost float32) *MatchPhraseQuery
+    Boost specifies the boost for this query.
+
+func (q *MatchPhraseQuery) Field(field string) *MatchPhraseQuery
+    Field specifies the field for this query.
+
+func (q MatchPhraseQuery) MarshalJSON() ([]byte, error)
+    marshal's query to JSON for use with search REST API.
+
+type MatchQuery struct {
+	// Has unexported fields.
+}
+    MatchQuery represents a search match query.
+
+func NewMatchQuery(match string) *MatchQuery
+    NewMatchQuery creates a new MatchQuery.
+
+func (q *MatchQuery) Analyzer(analyzer string) *MatchQuery
+    Analyzer specifies the analyzer to use for this query.
+
+func (q *MatchQuery) Boost(boost float32) *MatchQuery
+    Boost specifies the boost for this query.
+
+func (q *MatchQuery) Field(field string) *MatchQuery
+    Field specifies the field for this query.
+
+func (q *MatchQuery) Fuzziness(fuzziness uint64) *MatchQuery
+    Fuzziness specifies the fuziness for this query.
+
+func (q MatchQuery) MarshalJSON() ([]byte, error)
+    marshal's query to JSON for use with search REST API.
+
+func (q *MatchQuery) Operator(operator MatchOperator) *MatchQuery
+    Operator defines how the individual match terms should be logically
+    concatenated.
+
+func (q *MatchQuery) PrefixLength(length uint64) *MatchQuery
+    PrefixLength specifies the prefix length from this query.
+
+type NumericFacet struct {
+	// Has unexported fields.
+}
+    NumericFacet is an search numeric range facet.
+
+func NewNumericFacet(field string, size uint64) *NumericFacet
+    NewNumericFacet creates a new numeric range facet.
+
+func (f *NumericFacet) AddRange(name string, start, end float64) *NumericFacet
+    AddRange adds a new range to this numeric range facet.
+
+func (f NumericFacet) MarshalJSON() ([]byte, error)
+    MarshalJSON marshal's this facet to JSON for the search REST API.
+
+type NumericRangeQuery struct {
+	// Has unexported fields.
+}
+    NumericRangeQuery represents a search numeric range query.
+
+func NewNumericRangeQuery() *NumericRangeQuery
+    NewNumericRangeQuery creates a new NumericRangeQuery.
+
+func (q *NumericRangeQuery) Boost(boost float32) *NumericRangeQuery
+    Boost specifies the boost for this query.
+
+func (q *NumericRangeQuery) Field(field string) *NumericRangeQuery
+    Field specifies the field for this query.
+
+func (q NumericRangeQuery) MarshalJSON() ([]byte, error)
+    marshal's query to JSON for use with search REST API.
+
+func (q *NumericRangeQuery) Max(max float32, inclusive bool) *NumericRangeQuery
+    Max specifies the maximum value and inclusiveness for this range query.
+
+func (q *NumericRangeQuery) Min(min float32, inclusive bool) *NumericRangeQuery
+    Min specifies the minimum value and inclusiveness for this range query.
+
+type PhraseQuery struct {
+	// Has unexported fields.
+}
+    PhraseQuery represents a search phrase query.
+
+func NewPhraseQuery(terms ...string) *PhraseQuery
+    NewPhraseQuery creates a new PhraseQuery.
+
+func (q *PhraseQuery) Boost(boost float32) *PhraseQuery
+    Boost specifies the boost for this query.
+
+func (q *PhraseQuery) Field(field string) *PhraseQuery
+    Field specifies the field for this query.
+
+func (q PhraseQuery) MarshalJSON() ([]byte, error)
+    MarshalJSON marshal's this query to JSON for the search REST API.
+
+type PrefixQuery struct {
+	// Has unexported fields.
+}
+    PrefixQuery represents a search prefix query.
+
+func NewPrefixQuery(prefix string) *PrefixQuery
+    NewPrefixQuery creates a new PrefixQuery.
+
+func (q *PrefixQuery) Boost(boost float32) *PrefixQuery
+    Boost specifies the boost for this query.
+
+func (q *PrefixQuery) Field(field string) *PrefixQuery
+    Field specifies the field for this query.
+
+func (q PrefixQuery) MarshalJSON() ([]byte, error)
+    MarshalJSON marshal's this query to JSON for the search REST API.
+
+type Query interface {
+}
+    Query represents a search query.
+
+type QueryStringQuery struct {
+	// Has unexported fields.
+}
+    QueryStringQuery represents a search string query.
+
+func NewQueryStringQuery(query string) *QueryStringQuery
+    NewQueryStringQuery creates a new StringQuery.
+
+func (q *QueryStringQuery) Boost(boost float32) *QueryStringQuery
+    Boost specifies the boost for this query.
+
+func (q QueryStringQuery) MarshalJSON() ([]byte, error)
+    marshal's query to JSON for use with search REST API.
+
+type RegexpQuery struct {
+	// Has unexported fields.
+}
+    RegexpQuery represents a search regular expression query.
+
+func NewRegexpQuery(regexp string) *RegexpQuery
+    NewRegexpQuery creates a new RegexpQuery.
+
+func (q *RegexpQuery) Boost(boost float32) *RegexpQuery
+    Boost specifies the boost for this query.
+
+func (q *RegexpQuery) Field(field string) *RegexpQuery
+    Field specifies the field for this query.
+
+func (q RegexpQuery) MarshalJSON() ([]byte, error)
+    marshal's query to JSON for use with search REST API.
+
+type SearchSortField struct {
+	// Has unexported fields.
+}
+    SearchSortField represents a search field sort.
+
+func NewSearchSortField(field string) *SearchSortField
+    NewSearchSortField creates a new SearchSortField.
+
+func (q *SearchSortField) Descending(descending bool) *SearchSortField
+    Descending specifies the ordering of the results.
+
+func (q SearchSortField) MarshalJSON() ([]byte, error)
+    MarshalJSON marshal's this query to JSON for the search REST API.
+
+func (q *SearchSortField) Missing(missing string) *SearchSortField
+    Missing allows you to specify the search field sort missing behaviour.
+
+func (q *SearchSortField) Mode(mode string) *SearchSortField
+    Mode allows you to specify the search field sort mode.
+
+func (q *SearchSortField) Type(value string) *SearchSortField
+    Type allows you to specify the search field sort type.
+
+type SearchSortGeoDistance struct {
+	// Has unexported fields.
+}
+    SearchSortGeoDistance represents a search geo sort.
+
+func NewSearchSortGeoDistance(field string, lon, lat float64) *SearchSortGeoDistance
+    NewSearchSortGeoDistance creates a new SearchSortGeoDistance.
+
+func (q *SearchSortGeoDistance) Descending(descending bool) *SearchSortGeoDistance
+    Descending specifies the ordering of the results.
+
+func (q SearchSortGeoDistance) MarshalJSON() ([]byte, error)
+    MarshalJSON marshal's this query to JSON for the search REST API.
+
+func (q *SearchSortGeoDistance) Unit(unit string) *SearchSortGeoDistance
+    Unit specifies the unit used for sorting
+
+type SearchSortGeoDistanceUnits string
+    SearchSortGeoDistanceUnits represents the set of unit values available for
+    use with SearchSortGeoDistance.
+
+const (
+	SearchSortGeoDistanceUnitsMeters        SearchSortGeoDistanceUnits = "meters"
+	SearchSortGeoDistanceUnitsCentimeters   SearchSortGeoDistanceUnits = "centimeters"
+	SearchSortGeoDistanceUnitsFeet          SearchSortGeoDistanceUnits = "feet"
+	SearchSortGeoDistanceUnitsInches        SearchSortGeoDistanceUnits = "inch"
+	SearchSortGeoDistanceUnitsKilometers    SearchSortGeoDistanceUnits = "kilometers"
+	SearchSortGeoDistanceUnitsMiles         SearchSortGeoDistanceUnits = "miles"
+	SearchSortGeoDistanceUnitsMilliMeters   SearchSortGeoDistanceUnits = "millimeters"
+	SearchSortGeoDistanceUnitsNauticalMiles SearchSortGeoDistanceUnits = "nauticalmiles"
+	SearchSortGeoDistanceUnitsYards         SearchSortGeoDistanceUnits = "yards"
+)
+type SearchSortID struct {
+	// Has unexported fields.
+}
+    SearchSortID represents a search Document ID sort.
+
+func NewSearchSortID() *SearchSortID
+    NewSearchSortID creates a new SearchSortScore.
+
+func (q *SearchSortID) Descending(descending bool) *SearchSortID
+    Descending specifies the ordering of the results.
+
+func (q SearchSortID) MarshalJSON() ([]byte, error)
+    MarshalJSON marshal's this query to JSON for the search REST API.
+
+type SearchSortScore struct {
+	// Has unexported fields.
+}
+    SearchSortScore represents a search score sort.
+
+func NewSearchSortScore() *SearchSortScore
+    NewSearchSortScore creates a new SearchSortScore.
+
+func (q *SearchSortScore) Descending(descending bool) *SearchSortScore
+    Descending specifies the ordering of the results.
+
+func (q SearchSortScore) MarshalJSON() ([]byte, error)
+    MarshalJSON marshal's this query to JSON for the search REST API.
+
+type Sort interface {
+}
+    SearchSort represents an search sorting for a search query.
+
+type TermFacet struct {
+	// Has unexported fields.
+}
+    TermFacet is an search term facet.
+
+func NewTermFacet(field string, size uint64) *TermFacet
+    NewTermFacet creates a new TermFacet
+
+func (f TermFacet) MarshalJSON() ([]byte, error)
+    MarshalJSON marshal's this facet to JSON for the search REST API.
+
+type TermQuery struct {
+	// Has unexported fields.
+}
+    TermQuery represents a search term query.
+
+func NewTermQuery(term string) *TermQuery
+    NewTermQuery creates a new TermQuery.
+
+func (q *TermQuery) Boost(boost float32) *TermQuery
+    Boost specifies the boost for this query.
+
+func (q *TermQuery) Field(field string) *TermQuery
+    Field specifies the field for this query.
+
+func (q *TermQuery) Fuzziness(fuzziness uint64) *TermQuery
+    Fuzziness specifies the fuziness for this query.
+
+func (q TermQuery) MarshalJSON() ([]byte, error)
+    MarshalJSON marshal's this query to JSON for the search REST API.
+
+func (q *TermQuery) PrefixLength(length uint64) *TermQuery
+    PrefixLength specifies the prefix length from this query.
+
+type TermRangeQuery struct {
+	// Has unexported fields.
+}
+    TermRangeQuery represents a search term range query.
+
+func NewTermRangeQuery() *TermRangeQuery
+    NewTermRangeQuery creates a new TermRangeQuery.
+
+func (q *TermRangeQuery) Boost(boost float32) *TermRangeQuery
+    Boost specifies the boost for this query.
+
+func (q *TermRangeQuery) Field(field string) *TermRangeQuery
+    Field specifies the field for this query.
+
+func (q TermRangeQuery) MarshalJSON() ([]byte, error)
+    MarshalJSON marshal's this query to JSON for the search REST API.
+
+func (q *TermRangeQuery) Max(max string, inclusive bool) *TermRangeQuery
+    Max specifies the maximum value and inclusiveness for this range query.
+
+func (q *TermRangeQuery) Min(min string, inclusive bool) *TermRangeQuery
+    Min specifies the minimum value and inclusiveness for this range query.
+
+type WildcardQuery struct {
+	// Has unexported fields.
+}
+    WildcardQuery represents a search wildcard query.
+
+func NewWildcardQuery(wildcard string) *WildcardQuery
+    NewWildcardQuery creates a new WildcardQuery.
+
+func (q *WildcardQuery) Boost(boost float32) *WildcardQuery
+    Boost specifies the boost for this query.
+
+func (q *WildcardQuery) Field(field string) *WildcardQuery
+    Field specifies the field for this query.
+
+func (q WildcardQuery) MarshalJSON() ([]byte, error)
+    MarshalJSON marshal's this query to JSON for the search REST API.
+
