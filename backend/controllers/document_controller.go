@@ -9,6 +9,7 @@ import (
 )
 
 type UpdateDocRequest struct {
+	DisplayName string `json:"display_name"`
 	Category    string `json:"category"`
 	Description string `json:"description"`
 }
@@ -26,7 +27,7 @@ func UpdateDocument(c *gin.Context) {
 		return
 	}
 
-	err := repositories.UpdateDocumentMetadata(id, req.Category, req.Description)
+	err := repositories.UpdateDocumentMetadata(id, req.DisplayName, req.Category, req.Description)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update document"})
 		return

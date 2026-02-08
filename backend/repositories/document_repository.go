@@ -45,15 +45,15 @@ func SaveDocument(doc *models.Document) error {
 	return nil
 }
 
-func UpdateDocumentMetadata(id string, category string, description string) error {
+func UpdateDocumentMetadata(id string, displayName string, category string, description string) error {
 	bucketName := os.Getenv("DB_BUCKET")
 	scopeName := os.Getenv("DB_SCOPE")
 	collectionName := os.Getenv("DB_COLLECTION")
 
-	query := fmt.Sprintf("UPDATE `%s`.`%s`.`%s` SET category = $1, description = $2 WHERE id = $3", bucketName, scopeName, collectionName)
+	query := fmt.Sprintf("UPDATE `%s`.`%s`.`%s` SET display_name = $1, category = $2, description = $3 WHERE id = $4", bucketName, scopeName, collectionName)
 
 	_, err := config.Cluster.Query(query, &gocb.QueryOptions{
-		PositionalParameters: []interface{}{category, description, id},
+		PositionalParameters: []interface{}{displayName, category, description, id},
 	})
 
 	return err
