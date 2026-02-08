@@ -14,7 +14,7 @@ func SetupRouter() *gin.Engine {
 	// CORS Configuration
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:3000"},
-		AllowMethods:     []string{"POST", "GET", "OPTIONS"},
+		AllowMethods:     []string{"POST", "GET", "OPTIONS", "PUT", "DELETE"},
 		AllowHeaders:     []string{"Origin", "Content-Type"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
@@ -23,8 +23,12 @@ func SetupRouter() *gin.Engine {
 	// API Group
 	api := r.Group("/api")
 	{
-		api.POST("/upload", controllers.UploadDocument)
+		api.POST("/documents/upload", controllers.UploadDocument)
 		api.GET("/documents", controllers.GetDocuments)
+		api.PUT("/documents/:id", controllers.UpdateDocument)
+		api.PATCH("/documents/:id/name", controllers.UpdateDocumentName)
+		api.DELETE("/documents/:id", controllers.DeleteDocument)
+
 		api.POST("/chat", controllers.HandleChat)
 	}
 

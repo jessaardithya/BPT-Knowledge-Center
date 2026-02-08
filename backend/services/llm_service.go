@@ -10,7 +10,7 @@ import (
 )
 
 // GenerateAnswer calls Google Gemini to generate a natural answer based on context.
-func GenerateAnswer(matches []string, question string) (string, error) {
+func GenerateAnswer(matches []ChunkMatch, question string) (string, error) {
 	// 1. Check for API Key (Try GOOGLE_API_KEY first as per user, then GEMINI_API_KEY)
 	apiKey := os.Getenv("GOOGLE_API_KEY")
 	if apiKey == "" {
@@ -36,22 +36,41 @@ func GenerateAnswer(matches []string, question string) (string, error) {
 	model := client.GenerativeModel("gemini-3-flash-preview")
 	model.SetTemperature(0.2) // Low temperature for factual answers
 
-	// 3. Construct Prompt
+	// 3. Construct Prompt with source information
 	contextBlock := ""
 	for i, match := range matches {
-		contextBlock += fmt.Sprintf("Source %d:\n%s\n\n", i+1, match)
+		sourceInfo := ""
+		if match.Source != "" {
+			sourceInfo = fmt.Sprintf(" (from %s", match.Source)
+			if match.Page > 0 {
+				sourceInfo += fmt.Sprintf(", Page %d", match.Page)
+			}
+			sourceInfo += ")"
+		}
+		contextBlock += fmt.Sprintf("Source %d%s:\n%s\n\n", i+1, sourceInfo, match.Text)
 	}
 
-	prompt := fmt.Sprintf(`You are a helpful assistant for the BPT Knowledge Center.
-Answer the user's question using ONLY the provided context information below.
-If the answer is not in the context, say "I couldn't find that information in the documents."
-Do not make up information. Keep the answer concise.
+	prompt := fmt.Sprintf(`You are a high-level technical assistant for the BPT Knowledge Center.
+Your goal is to provide a comprehensive, clear, and professional answer based **ONLY** on the context provided below.
 
-Context:
+### Formatting Guidelines:
+1. **Direct Summary**: Start with a 1-2 sentence high-level summary of the answer.
+2. **Structured Details**: Use bullet points or numbered lists for technical features, steps, or list items.
+3. **Emphasis**: Use **bold** text for key terms, categories, or important entities.
+4. **Tone**: Maintain a professional, objective, and helpful tone.
+5. **Constraints**: 
+   - If the information is not in the context, explicitly state: "I couldn't find that specific information in the available documents."
+   - Do not mention the context sources (e.g., "Source 1 says...") directly in the narrative unless necessary for clarity.
+   - Use standard Markdown formatting for best readability in a web interface.
+
+---
+**Context Documents:**
 %s
 
-Question: %s
-Answer:`, contextBlock, question)
+---
+**User Question:** %s
+
+**Structured Answer:**`, contextBlock, question)
 
 	// 4. Generate
 	fmt.Println("DEBUG: Sending request to Gemini...")

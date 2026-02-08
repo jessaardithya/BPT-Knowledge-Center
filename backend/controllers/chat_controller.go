@@ -12,6 +12,12 @@ type ChatRequest struct {
 	Message string `json:"message"`
 }
 
+// Source represents a document source with filename and page
+type Source struct {
+	Filename string `json:"filename"`
+	Page     int    `json:"page"`
+}
+
 func HandleChat(c *gin.Context) {
 	var req ChatRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -41,7 +47,28 @@ func HandleChat(c *gin.Context) {
 		return
 	}
 
-	// 3. Formulate Response (Search + Generation)
+	// 3. Extract unique sources from matches
+	sourceMap := make(map[string]Source)
+	for _, match := range matches {
+		if match.Source != "" {
+			key := match.Source
+			if match.Page > 0 {
+				key = match.Source + string(rune(match.Page))
+			}
+			sourceMap[key] = Source{
+				Filename: match.Source,
+				Page:     match.Page,
+			}
+		}
+	}
+
+	// Convert to slice
+	var sources []Source
+	for _, s := range sourceMap {
+		sources = append(sources, s)
+	}
+
+	// 4. Formulate Response (Search + Generation)
 	// Try to generate a natural answer using Gemini
 	answer, err := services.GenerateAnswer(matches, req.Message)
 
@@ -53,11 +80,16 @@ func HandleChat(c *gin.Context) {
 		if len(matches) == 0 {
 			responseText = "I couldn't find any relevant information in your documents."
 		} else {
-			responseText = "Here is what I found in your documents:\n\n" + strings.Join(matches, "\n\n---\n\n")
+			var texts []string
+			for _, m := range matches {
+				texts = append(texts, m.Text)
+			}
+			responseText = "Here is what I found in your documents:\n\n" + strings.Join(texts, "\n\n---\n\n")
 		}
 	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"response": responseText,
+		"sources":  sources,
 	})
 }

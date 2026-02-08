@@ -2,8 +2,12 @@ import fitz
 import logging
 from typing import List, Dict, Any
 from sentence_transformers import SentenceTransformer
+import transformers
 from models.schemas import ContentItem
 from core.config import settings
+
+# Suppress transformer warnings about unexpected keys (e.g., position_ids)
+transformers.logging.set_verbosity_error()
 
 logger = logging.getLogger(__name__)
 
@@ -11,7 +15,14 @@ logger = logging.getLogger(__name__)
 class DocumentProcessor:
     def __init__(self):
         logger.info(f"Loading Embedding Model: {settings.EMBEDDING_MODEL}")
-        self.model = SentenceTransformer(settings.EMBEDDING_MODEL)
+        
+        # Use HF token if provided in settings
+        use_auth_token = settings.HF_TOKEN if settings.HF_TOKEN else None
+        
+        self.model = SentenceTransformer(
+            settings.EMBEDDING_MODEL,
+            use_auth_token=use_auth_token
+        )
         logger.info("Model loaded")
 
     def embed_text(self, text: str) -> List[float]:

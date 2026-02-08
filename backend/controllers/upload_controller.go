@@ -4,6 +4,7 @@ import (
 	"bpt-knowledge-center/backend/models"
 	"bpt-knowledge-center/backend/repositories"
 	"bpt-knowledge-center/backend/services"
+	"log"
 	"net/http"
 	"time"
 
@@ -17,6 +18,29 @@ func UploadDocument(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "No file uploaded"})
 		return
+	}
+
+	// Get optional display name
+	displayName := c.PostForm("display_name")
+	if displayName == "" {
+		displayName = fileHeader.Filename
+	}
+
+	// Check if this is a re-upload (update existing document)
+	documentID := c.PostForm("document_id")
+	var existingVersion int = 0
+
+	// If re-uploading, get existing version and DELETE old document first
+	// This removes old chunks to prevent AI conflicts
+	if documentID != "" {
+		existingDoc, err := repositories.GetDocumentByID(documentID)
+		if err == nil && existingDoc != nil {
+			existingVersion = existingDoc.Version
+			// Delete old document to remove old chunks from vector index
+			if err := repositories.DeleteDocument(documentID); err != nil {
+				log.Printf("Warning: Failed to delete old document: %v", err)
+			}
+		}
 	}
 
 	file, err := fileHeader.Open()
@@ -44,16 +68,29 @@ func UploadDocument(c *gin.Context) {
 		return
 	}
 
-	// 4. Create Document Model
+	// Create new document (with same ID if re-upload, new ID otherwise)
+	var docID string
+	var version int = 1
+
+	if documentID != "" && existingVersion > 0 {
+		docID = documentID
+		version = existingVersion + 1
+	} else {
+		docID = "doc::" + uuid.New().String()
+	}
+
 	doc := models.Document{
-		ID:           "doc::" + uuid.New().String(),
+		ID:           docID,
 		Type:         "document",
 		Filename:     fileHeader.Filename,
+		DisplayName:  displayName,
 		FileURL:      fileURL,
 		ContentType:  parsedData.ContentType,
 		UploadedAt:   time.Now(),
+		UpdatedAt:    time.Now(),
 		ElementCount: parsedData.ElementCount,
-		DocType:      "knowledge-base.bpt-docs", // Matches Index Type Mapping
+		Version:      version,
+		DocType:      "knowledge-base.bpt-docs",
 		Chunks:       make([]models.DocumentChunk, len(parsedData.Data)),
 	}
 
@@ -67,7 +104,7 @@ func UploadDocument(c *gin.Context) {
 		}
 	}
 
-	// 5. Save to Couchbase
+	// Save new version to Couchbase
 	if err := repositories.SaveDocument(&doc); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database save failed"})
 		return
@@ -78,5 +115,6 @@ func UploadDocument(c *gin.Context) {
 		"id":      doc.ID,
 		"url":     doc.FileURL,
 		"count":   doc.ElementCount,
+		"version": doc.Version,
 	})
 }
