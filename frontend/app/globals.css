@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --color-brand-blue: #0A2540;
+  --color-brand-accent: #3E7BFA;
+
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-tertiary: var(--bg-tertiary);
+  
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+
+  --color-border-primary: var(--border-primary);
+  --color-border-secondary: var(--border-secondary);
+
+  --font-geist-sans: var(--font-geist-sans);
+  --font-geist-mono: var(--font-geist-mono);
+}
+
+:root {
+  /* LIGHT MODE - Crisp, Professional, High Contrast */
+  --brand-blue: #0A2540;
+  --brand-accent: #3E7BFA;
+  --brand-light: #F8FAFC;
+
+  --bg-primary: #ffffff;      /* Main content bg */
+  --bg-secondary: #F8FAFC;    /* Sidebar/Page bg */
+  --bg-tertiary: #F1F5F9;     /* Inputs/Cards hover */
+
+  --text-primary: #0F172A;    /* Headings, main text */
+  --text-secondary: #475569;  /* Subtitles, body */
+  --text-tertiary: #94A3B8;   /* Meta info, placeholders */
+
+  --border-primary: #E2E8F0;  /* Key dividers */
+  --border-secondary: #F1F5F9;/* Subtle borders */
+
+  --font-geist-sans: "Geist Sans", sans-serif;
+  --font-geist-mono: "Geist Mono", monospace;
+}
+
+/* DARK MODE - "Obsidian", Deep Blue/Slate, Premium */
+.dark {
+  --bg-primary: #0B1121;      /* Deepest obsidian blue (Main bg) */
+  --bg-secondary: #151F32;    /* Slightly lighter (Sidebar/Cards) */
+  --bg-tertiary: #1E293B;     /* Inputs/Hover states */
+
+  --text-primary: #F8FAFC;    /* White text */
+  --text-secondary: #94A3B8;  /* Softer gray-blue text */
+  --text-tertiary: #64748B;   /* Meta info */
+
+  --border-primary: #1E293B;  /* Borders match tertiary bg */
+  --border-secondary: #334155;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-geist-sans);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Utility to force transitions on theme switch */
+* {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+/* Custom Scrollbar for a premium feel */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-primary);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
